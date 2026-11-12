@@ -1,0 +1,237 @@
+<!-- Slide-over Cart Drawer & Checkout Modal Components -->
+<div id="cart-drawer-overlay" class="cart-overlay" onclick="closeCartDrawer()" aria-hidden="true"></div>
+
+<aside id="cart-drawer" class="cart-drawer" aria-label="Order Cart" aria-hidden="true">
+  <!-- Drawer Header -->
+  <div class="cart-drawer-header">
+    <div style="display:flex; align-items:center; gap:0.6rem">
+      <div class="cart-header-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 style="margin:0; font-size:1.15rem; font-weight:800; color:var(--text-main); font-family:var(--font-heading)">Your Order Cart</h3>
+        <span id="drawer-items-count-badge" class="drawer-count-badge">0 items</span>
+      </div>
+    </div>
+    <button type="button" class="drawer-close-btn" onclick="closeCartDrawer()" aria-label="Close cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Delivery Info Strip -->
+  <div class="drawer-delivery-strip">
+    <div style="display:flex; align-items:center; gap:0.5rem">
+      <span class="delivery-pulsing-dot"></span>
+      <span style="font-size:0.84rem; font-weight:600; color:#0F172A">Standard Dispatch: <strong>20–35 min</strong></span>
+    </div>
+    <span class="delivery-city-badge">Karachi</span>
+  </div>
+
+  <!-- Drawer Body: Cart Items List -->
+  <div id="cart-drawer-items" class="cart-drawer-body">
+    <!-- Populated dynamically by JavaScript -->
+    <div class="cart-empty-state">
+      <div class="empty-icon-bubble">🍲</div>
+      <h4 style="margin:0.5rem 0 0.25rem; font-size:1.1rem; color:var(--text-main)">Your cart is hungry!</h4>
+      <p style="margin:0 0 1.2rem; color:var(--text-muted); font-size:0.88rem; max-width:24ch">Add delicious dishes from our Karachi menu to start ordering.</p>
+      <button type="button" class="btn sm" onclick="closeCartDrawer(); scrollToMenu();">Browse Popular Dishes</button>
+    </div>
+  </div>
+
+  <!-- Drawer Footer: Calculations & Checkout -->
+  <div id="cart-drawer-footer" class="cart-drawer-footer">
+    <div class="bill-breakdown-card">
+      <div class="bill-row">
+        <span>Items Subtotal</span>
+        <strong id="drawer-subtotal">Rs. 0</strong>
+      </div>
+      <div class="bill-row">
+        <span style="display:flex; align-items:center; gap:0.35rem">
+          Delivery Fee
+          <span style="font-size:0.75rem; background:rgba(15,23,42,0.06); padding:0.1rem 0.4rem; border-radius:4px; color:var(--text-muted)">Standard</span>
+        </span>
+        <span id="drawer-delivery-fee" style="font-weight:600">Rs. 150</span>
+      </div>
+      <div class="bill-row">
+        <span style="display:flex; align-items:center; gap:0.35rem">
+          Estimated Tax
+          <span style="font-size:0.75rem; background:rgba(226,55,68,0.08); color:var(--primary); font-weight:700; padding:0.1rem 0.4rem; border-radius:4px">5%</span>
+        </span>
+        <span id="drawer-tax">Rs. 0</span>
+      </div>
+      <div class="bill-divider"></div>
+      <div class="bill-row total">
+        <span>Grand Total</span>
+        <span id="drawer-grand-total" class="bill-grand-price">Rs. 0</span>
+      </div>
+    </div>
+
+    <div class="drawer-cta-row">
+      <button type="button" class="btn ghost sm" onclick="clearCartConfirm()" title="Clear all items from cart">Clear</button>
+      <button type="button" id="drawer-checkout-btn" class="btn drawer-checkout-btn" onclick="openCheckoutModal()">
+        <span>Proceed to Checkout</span>
+        <span id="checkout-btn-total-pill" class="checkout-price-pill">Rs. 0</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Sleek Checkout Modal -->
+<div id="checkout-modal-overlay" class="checkout-modal-overlay" onclick="closeCheckoutModal()" aria-hidden="true"></div>
+
+<div id="checkout-modal" class="checkout-modal" role="dialog" aria-labelledby="checkout-modal-title" aria-hidden="true">
+  <div class="checkout-modal-header">
+    <div style="display:flex; align-items:center; gap:0.6rem">
+      <div class="checkout-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13"></rect>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+          <circle cx="5.5" cy="18.5" r="2.5"></circle>
+          <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+      </div>
+      <div>
+        <h3 id="checkout-modal-title" style="margin:0; font-size:1.2rem; font-weight:800; font-family:var(--font-heading)">Fast Dispatch Checkout</h3>
+        <p style="margin:0.15rem 0 0; font-size:0.82rem; color:var(--text-muted)">Verified kitchen dispatch with live rider tracking</p>
+      </div>
+    </div>
+    <button type="button" class="drawer-close-btn" onclick="closeCheckoutModal()" aria-label="Close checkout modal">✕</button>
+  </div>
+
+  <form id="checkout-form" onsubmit="handlePlaceOrder(event)" class="checkout-modal-body">
+    <!-- Quick Order Summary Banner -->
+    <div class="checkout-summary-banner">
+      <div>
+        <div style="font-size:0.82rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em">Total Amount Due</div>
+        <div id="modal-grand-total" style="font-size:1.45rem; font-weight:800; color:var(--primary); font-family:var(--font-heading)">Rs. 0</div>
+      </div>
+      <div style="text-align:right">
+        <span id="modal-items-count" class="tag info" style="font-weight:700">0 Items</span>
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem">Estimated delivery: <strong>25–35 min</strong></div>
+      </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <div class="checkout-section">
+      <label for="checkout-address">Delivery Address (Karachi)</label>
+      <textarea id="checkout-address" name="address" rows="2" required placeholder="House/Apartment #, Street, Area, Karachi">{{ customer.city if customer and customer.city else 'Karachi, Pakistan' }}</textarea>
+      
+      <!-- Quick Area Presets -->
+      <div class="address-chips-strip">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600">Quick select:</span>
+        <button type="button" class="addr-chip" onclick="fillAddress('Block 5, Clifton, Karachi')">Clifton</button>
+        <button type="button" class="addr-chip" onclick="fillAddress('Block 13-D, Gulshan-e-Iqbal, Karachi')">Gulshan</button>
+        <button type="button" class="addr-chip" onclick="fillAddress('Phase 6, DHA, Karachi')">DHA</button>
+        <button type="button" class="addr-chip" onclick="fillAddress('Tariq Road, PECHS, Karachi')">Tariq Rd</button>
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="checkout-section">
+      <label for="checkout-phone">Contact Phone Number</label>
+      <input type="tel" id="checkout-phone" name="phone" required placeholder="0300-1234567" value="0300-1234567">
+    </div>
+
+    <!-- Payment Method Selector -->
+    <div class="checkout-section">
+      <label>Select Payment Method</label>
+      <div class="payment-cards-grid">
+        <label class="payment-card-option">
+          <input type="radio" name="payment_method" value="Cash" checked>
+          <div class="payment-card-inner">
+            <div class="payment-method-icon">💵</div>
+            <div>
+              <strong>Cash on Delivery</strong>
+              <small>Pay cash to the rider at your doorstep</small>
+            </div>
+          </div>
+        </label>
+
+        <label class="payment-card-option">
+          <input type="radio" name="payment_method" value="Card">
+          <div class="payment-card-inner">
+            <div class="payment-method-icon">💳</div>
+            <div>
+              <strong>Debit / Credit Card</strong>
+              <small>Instant simulated bank authorization</small>
+            </div>
+          </div>
+        </label>
+
+        <label class="payment-card-option">
+          <input type="radio" name="payment_method" value="Online">
+          <div class="payment-card-inner">
+            <div class="payment-method-icon">📱</div>
+            <div>
+              <strong>Online Banking / EasyPaisa</strong>
+              <small>Simulated 1-click mobile verification</small>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="checkout-modal-actions">
+      <button type="button" class="btn ghost" onclick="closeCheckoutModal()">Cancel</button>
+      <button type="submit" id="confirm-order-btn" class="btn" style="flex:1; padding:0.8rem 1.4rem; font-size:1rem; font-weight:700">
+        <span id="btn-order-text">Place Order Now</span>
+        <span class="btn-spinner hidden" id="order-spinner"></span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Order Success State -->
+  <div id="checkout-success-state" class="checkout-success-view hidden">
+    <div class="success-sparkle-bubble">🎉</div>
+    <h3 style="margin:0 0 0.35rem; font-size:1.4rem; color:var(--text-main); font-family:var(--font-heading)">Order Placed Successfully!</h3>
+    <p style="margin:0 0 1.2rem; color:var(--text-muted); font-size:0.92rem">Your kitchen dispatch is confirmed and rider assignment is underway.</p>
+    
+    <div class="success-ticket-box">
+      <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem">
+        <span style="color:var(--text-muted); font-size:0.85rem">Order Reference:</span>
+        <strong id="success-order-id" style="color:var(--primary); font-family:var(--font-heading)">#MB-7824</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem">
+        <span style="color:var(--text-muted); font-size:0.85rem">Estimated Arrival:</span>
+        <span style="font-weight:700; color:#0F172A">25–35 Minutes</span>
+      </div>
+      <div style="display:flex; justify-content:space-between">
+        <span style="color:var(--text-muted); font-size:0.85rem">Payment Method:</span>
+        <span id="success-payment-method" style="font-weight:600">Cash on Delivery</span>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0.75rem; justify-content:center; margin-top:1.5rem">
+      <button type="button" class="btn ghost sm" onclick="finishOrderAndReload()">Back to Home</button>
+      {% if logged_in %}
+      <a href="{{ url_for('shop.my_orders') }}" class="btn sm">View Order Tracking &rarr;</a>
+      {% else %}
+      <button type="button" class="btn sm" onclick="finishOrderAndReload()">Done</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Floating Cart Button (Mobile & Responsive) -->
+<button id="floating-cart-fab" class="floating-cart-btn" onclick="openCartDrawer()" aria-label="View shopping cart" title="View Cart">
+  <div class="cart-fab-icon-wrap">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+    <span id="fab-cart-badge" class="floating-badge">0</span>
+  </div>
+  <span class="floating-cart-text">Cart &bull; <strong id="fab-cart-total">Rs. 0</strong></span>
+</button>

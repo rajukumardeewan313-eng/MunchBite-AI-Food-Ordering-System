@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E232E" />
+      <stop offset="100%" stop-color="#0E1218" />
+    </linearGradient>
+    <linearGradient id="favSpark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B55" />
+      <stop offset="60%" stop-color="#E23744" />
+      <stop offset="100%" stop-color="#B81423" />
+    </linearGradient>
+    <linearGradient id="favAccent" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E23744" />
+      <stop offset="100%" stop-color="#FF9F1C" />
+    </linearGradient>
+  </defs>
+
+  <!-- Modern Dark Squircle Base for High Contrast across all Browser Tabs -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#favBg)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+
+  <!-- Radiating AI Gastronomy Star -->
+  <g transform="translate(32 32) scale(0.64) translate(-50 -50)">
+    <!-- Cardinal Rays -->
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" fill="url(#favSpark)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(90 50 50)" fill="url(#favSpark)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(180 50 50)" fill="url(#favSpark)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(270 50 50)" fill="url(#favSpark)" />
+
+    <!-- Diagonal Rays -->
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(45 50 50)" fill="url(#favAccent)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(135 50 50)" fill="url(#favAccent)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(225 50 50)" fill="url(#favAccent)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(315 50 50)" fill="url(#favAccent)" />
+
+    <!-- Center Bright Spark Core -->
+    <circle cx="50" cy="50" r="5.5" fill="#FFFFFF" />
+    <circle cx="50" cy="50" r="3" fill="#FFD166" />
+  </g>
+</svg>

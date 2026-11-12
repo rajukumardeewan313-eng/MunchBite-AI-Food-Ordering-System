@@ -1,0 +1,70 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_tag with context %}{% block title %}My Orders - MunchBite{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; flex-wrap:wrap; gap:0.8rem">
+  <div>
+    <h2>Order History & Tracking</h2>
+    <p class="meta">View active shipments, meal items, and transaction receipts</p>
+  </div>
+  {% if orders %}
+    <span class="tag ok"><span class="status-dot"></span> {{ orders|length }} order{{ 's' if orders|length != 1 }}</span>
+  {% endif %}
+</div>
+
+<form class="searchbar" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search by Order ID (e.g. 1) or Restaurant Name..." aria-label="Search orders">
+  <select name="status" style="width:auto; min-width:180px" aria-label="Filter Status">
+    <option value="">All Statuses</option>
+    {% for s in statuses %}
+      <option value="{{ s }}" {{ 'selected' if s == status }}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+  {% if q or status %}
+    <a href="{{ url_for('shop.my_orders') }}" class="btn ghost">Reset</a>
+  {% endif %}
+</form>
+
+{% if orders %}
+<div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Placed</th>
+        <th>Restaurant</th>
+        <th>Total Amount</th>
+        <th>Order Status</th>
+        <th>Payment</th>
+        <th>Delivery Status</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><strong>#{{ o.order_id }}</strong></td>
+        <td class="meta">{{ o.order_date|dt }}</td>
+        <td><strong>{{ o.restaurant_name }}</strong></td>
+        <td><strong>{{ o.total|rs }}</strong></td>
+        <td>{{ status_tag(o.order_status) }}</td>
+        <td>{{ status_tag(o.payment_status) }}</td>
+        <td>{{ status_tag(o.delivery_status) }}</td>
+        <td>
+          <a class="btn ghost sm" href="{{ url_for('shop.order_detail', oid=o.order_id) }}">
+            View
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:3.5rem 1.5rem">
+  <div style="font-size:3rem; margin-bottom:0.8rem">📦</div>
+  <h3>No orders found</h3>
+  <p class="meta" style="margin-bottom:1.5rem">You don't have any past orders matching these filters.</p>
+  <a href="{{ url_for('shop.menu') }}" class="btn">Explore Menu</a>
+</div>
+{% endif %}
+{% endblock %}

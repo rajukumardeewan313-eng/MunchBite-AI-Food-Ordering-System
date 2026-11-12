@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% block title %}My Profile - MunchBite{% endblock %}
+{% block content %}
+<div class="card form-narrow" style="padding:2.2rem; box-shadow:var(--shadow-sm)">
+  <div style="text-align:center; margin-bottom:1.5rem">
+    <h2 style="margin:0">Account Settings</h2>
+    <p class="meta" style="margin-top:0.3rem">Manage your delivery profile and security credentials</p>
+  </div>
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <label>Email Address</label>
+    <input value="{{ customer.email }}" disabled style="background:var(--surface-subtle); cursor:not-allowed">
+    
+    <label for="fn">Full Name</label>
+    <input id="fn" name="full_name" required value="{{ customer.full_name }}">
+    
+    <label for="ph">Phone Number</label>
+    <input id="ph" name="phone" value="{{ customer.phone or '' }}" placeholder="0300-1234567">
+    
+    <label for="ct">City</label>
+    <input id="ct" name="city" value="{{ customer.city or '' }}" placeholder="Karachi">
+    
+    <label for="np">New Password (leave blank to keep current)</label>
+    <input id="np" type="password" name="new_password" minlength="6" placeholder="Enter new password (optional)">
+    
+    <p style="margin-top:1.4rem">
+      <button class="btn" type="submit" style="width:100%; padding:0.75rem">Save Changes</button>
+    </p>
+  </form>
+</div>
+{% endblock %}

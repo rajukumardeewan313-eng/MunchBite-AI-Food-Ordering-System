@@ -1,0 +1,235 @@
+{% extends 'base.html' %}{% from '_macros.html' import food_card with context %}{% block title %}{{ r.name }} - Menu & Ordering - MunchBite{% endblock %}
+{% block content %}
+<!-- Breadcrumbs -->
+<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; font-size:0.86rem; color:var(--text-muted)">
+  <a href="{{ url_for('shop.index') }}" style="color:var(--text-muted); text-decoration:none">Home</a>
+  <span>&rsaquo;</span>
+  <a href="{{ url_for('shop.restaurants') }}" style="color:var(--text-muted); text-decoration:none">Restaurants</a>
+  <span>&rsaquo;</span>
+  <strong style="color:var(--text-main)">{{ r.name }}</strong>
+</div>
+
+<!-- Modern Restaurant Hero Banner Card -->
+<div class="restaurant-hero-banner card" style="position:relative; overflow:hidden; padding:0; border-radius:20px; margin-bottom:2rem; box-shadow:var(--shadow-md); border:1px solid var(--border)">
+  <!-- Background Image with Gradient Overlay -->
+  <div style="position:relative; height:240px; background:#161A22; overflow:hidden">
+    <img 
+      src="{{ r.banner_image or 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&auto=format&fit=crop&q=80' }}" 
+      alt="{{ r.name }}" 
+      style="width:100%; height:100%; object-fit:cover; opacity:0.42; transform:scale(1.02)"
+    >
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(22,26,34,0.3) 0%, rgba(22,26,34,0.92) 100%)"></div>
+    
+    <!-- Top-Right Badges -->
+    <div style="position:absolute; top:1.25rem; right:1.5rem; display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap">
+      <span class="tag ok" style="background:rgba(16,185,129,0.92); color:#FFFFFF; border:none; padding:0.35rem 0.9rem; font-weight:700; border-radius:var(--r-full); box-shadow:0 2px 8px rgba(0,0,0,0.2)">
+        <span class="status-dot" style="background:#FFFFFF"></span> {{ r.status }}
+      </span>
+      {% if r.avg_rating %}
+        <span class="tag warn" style="background:rgba(15,23,42,0.85); backdrop-filter:blur(6px); color:#FBBF24; border:1px solid rgba(251,191,36,0.3); padding:0.35rem 0.9rem; font-weight:700; border-radius:var(--r-full); box-shadow:0 2px 8px rgba(0,0,0,0.2)">
+          ★ {{ r.avg_rating }} ({{ r.review_count }} Reviews)
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- Hero Content Overlay -->
+    <div style="position:absolute; bottom:1.25rem; left:1.75rem; right:1.75rem">
+      <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(226,55,68,0.9); color:#FFFFFF; padding:0.2rem 0.75rem; border-radius:var(--r-full); font-size:0.75rem; font-weight:700; margin-bottom:0.5rem; letter-spacing:0.04em; text-transform:uppercase">
+        <span>⚡ Verified Partner Kitchen</span>
+      </div>
+      <h1 style="color:#FFFFFF; font-size:2.2rem; margin:0 0 0.35rem; font-family:var(--font-heading); text-shadow:0 2px 8px rgba(0,0,0,0.4)">
+        {{ r.name }}
+      </h1>
+      <p style="color:#E2E8F0; margin:0; font-size:0.95rem; display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap">
+        <span>📍 {{ r.address }}, {{ r.city }}</span>
+        {% if r.phone %} &bull; <span>📞 {{ r.phone }}</span>{% endif %}
+        &bull; <span>⏱ Standard Delivery: <strong>20–35 min</strong></span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Quick Kitchen Perks Strip -->
+  <div style="background:#FFFFFF; padding:0.9rem 1.75rem; display:flex; gap:1.5rem; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:0.86rem; border-top:1px solid var(--border-light)">
+    <div style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap">
+      <span style="display:flex; align-items:center; gap:0.4rem; color:var(--text-secondary)">
+        <span style="color:var(--primary); font-size:1.1rem">🛡️</span> 100% Hygienic Food Handling
+      </span>
+      <span style="display:flex; align-items:center; gap:0.4rem; color:var(--text-secondary)">
+        <span style="color:var(--primary); font-size:1.1rem">🛵</span> Direct Rider Dispatch from Kitchen
+      </span>
+      <span style="display:flex; align-items:center; gap:0.4rem; color:var(--text-secondary)">
+        <span style="color:var(--primary); font-size:1.1rem">💳</span> Instant Card, Online Banking & Cash on Delivery
+      </span>
+    </div>
+    <button type="button" class="btn ghost sm" onclick="openCartDrawer()" style="font-weight:700">
+      <span>View Cart &bull;</span>
+      <span class="cart-pill-total" style="color:var(--primary); font-weight:800">Checkout</span>
+    </button>
+  </div>
+</div>
+
+<!-- Section: Kitchen Menu -->
+<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem">
+  <div>
+    <h2 style="margin:0; font-size:1.6rem">{{ r.name }} &bull; Kitchen Menu</h2>
+    <p class="meta" style="margin:0.2rem 0 0">Freshly prepared signature dishes with live estimated cooking times</p>
+  </div>
+  
+  <!-- Category Filter Pills for this Restaurant -->
+  <div class="category-strip" style="margin-bottom:0; padding:0">
+    <button type="button" class="category-pill-card restaurant-category-pill active" data-category="all" onclick="filterRestaurantCategory('all')">
+      <span>All Items</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="biryani" onclick="filterRestaurantCategory('biryani')">
+      <span>Biryani</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="burgers" onclick="filterRestaurantCategory('burgers')">
+      <span>Burgers</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="pizza" onclick="filterRestaurantCategory('pizza')">
+      <span>Pizza</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="sides" onclick="filterRestaurantCategory('sides')">
+      <span>BBQ & Sides</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="seafood" onclick="filterRestaurantCategory('seafood')">
+      <span>Seafood</span>
+    </button>
+    <button type="button" class="category-pill-card restaurant-category-pill" data-category="drinks" onclick="filterRestaurantCategory('drinks')">
+      <span>Drinks & Desserts</span>
+    </button>
+  </div>
+</div>
+
+<!-- Responsive Food Grid (1 col mobile, 2 col tablet, 3-4 col desktop) -->
+<div id="restaurant-food-grid" class="dynamic-food-grid" data-restaurant-id="{{ r.restaurant_id }}">
+  {% for f in foods %}
+    <article class="modern-food-card group" data-category="{{ f.category_name|lower }}" data-id="{{ f.food_id }}">
+      <div class="card-image-wrap">
+        <img 
+          src="{{ f.image_url or 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60' }}" 
+          alt="{{ f.item_name }}" 
+          class="card-food-img" 
+          loading="lazy"
+        >
+        <div class="image-overlay-gradient"></div>
+
+        <div class="card-badge-top-left">
+          <span class="rating-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span>{{ f.rating or '4.8' }}</span>
+          </span>
+        </div>
+
+        <div class="card-badge-top-right">
+          <span class="prep-time-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>{{ f.prep_time or '20 min' }}</span>
+          </span>
+        </div>
+
+        {% if f.badge %}
+          <div class="card-badge-bottom-left">
+            <span class="feature-tag-chip {{ 'spicy' if f.is_spicy else '' }}">{{ f.badge }}</span>
+          </div>
+        {% elif f.is_spicy %}
+          <div class="card-badge-bottom-left">
+            <span class="feature-tag-chip spicy">Spicy 🌶</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="card-content-body">
+        <div class="card-meta-line">
+          <span class="card-restaurant-name">{{ r.name }}</span>
+          <span class="meta-dot">&bull;</span>
+          <span class="card-category-label">{{ f.category_name }}</span>
+        </div>
+
+        <h3 class="card-dish-name" title="{{ f.item_name }}">{{ f.item_name }}</h3>
+        
+        <p class="card-dish-desc">{{ f.description }}</p>
+
+        <div class="card-footer-row">
+          <div class="card-price-wrap">
+            <span class="price-val">{{ f.price|rs }}</span>
+          </div>
+
+          <div class="cart-action-container" data-food-id="{{ f.food_id }}">
+            <button 
+              type="button" 
+              class="btn-add-cart" 
+              onclick="addToCart({{ f.food_id }})"
+              aria-label="Add {{ f.item_name }} to cart"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add</span>
+            </button>
+
+            <div class="qty-control-group hidden">
+              <button type="button" class="qty-btn qty-minus" onclick="changeQty({{ f.food_id }}, -1)" aria-label="Decrease quantity">−</button>
+              <span class="qty-display">1</span>
+              <button type="button" class="qty-btn qty-plus" onclick="changeQty({{ f.food_id }}, 1)" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  {% else %}
+    <div class="card" style="grid-column: 1 / -1; text-align:center; padding:3rem 1.5rem">
+      <div style="font-size:3rem; margin-bottom:0.5rem">🍲</div>
+      <h3>Menu items loading...</h3>
+      <p class="meta">Please wait while dishes are retrieved.</p>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Section: Customer Reviews -->
+<div style="margin:3.5rem 0 1.25rem; display:flex; justify-content:space-between; align-items:center">
+  <div>
+    <h2 style="margin:0; font-size:1.5rem">Verified Customer Reviews</h2>
+    <p class="meta" style="margin:0.2rem 0 0">Ratings submitted by authenticated customers after delivery</p>
+  </div>
+  {% if r.avg_rating %}
+    <div style="display:flex; align-items:center; gap:0.4rem; background:#FFFFFF; padding:0.4rem 0.9rem; border-radius:var(--r-full); border:1px solid var(--border); box-shadow:var(--shadow-xs)">
+      <span style="color:#F59E0B; font-size:1.15rem">★</span>
+      <strong style="font-size:1.05rem">{{ r.avg_rating }}</strong>
+      <span class="meta">/ 5.0</span>
+    </div>
+  {% endif %}
+</div>
+
+<div class="two">
+  {% for v in reviews %}
+  <div class="card" style="border-radius:16px; padding:1.4rem; box-shadow:var(--shadow-xs)">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem">
+      <div style="display:flex; align-items:center; gap:0.6rem">
+        <div style="width:34px; height:34px; border-radius:50%; background:#FFF1F2; color:var(--primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9rem">
+          {{ v.full_name[:1] if v.full_name else 'C' }}
+        </div>
+        <strong>{{ v.full_name or 'Verified Customer' }}</strong>
+      </div>
+      <span class="stars" style="color:#F59E0B; font-size:1.05rem">{{ '★' * (v.rating|int if v.rating else 5) }}</span>
+    </div>
+    <div class="meta" style="margin-bottom:0.6rem; font-size:0.82rem">{{ v.review_date|dt if v.review_date else 'Recent Order' }}</div>
+    <p style="margin:0; font-style:italic; color:var(--text-body); font-size:0.92rem; line-height:1.5">
+      "{{ v.review_comment or 'Great food quality, arrived piping hot and neatly packed.' }}"
+    </p>
+  </div>
+  {% else %}
+  <div class="card" style="grid-column:1 / -1; text-align:center; padding:2.5rem; background:#FFFFFF; border-radius:16px">
+    <div style="font-size:2.5rem; margin-bottom:0.5rem">⭐</div>
+    <h3 style="margin:0 0 0.4rem">No reviews yet for this kitchen</h3>
+    <p class="meta">Place an order to be the first customer to leave feedback!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% set hide_widget = true %}{% block title %}AI Order Assistant - MunchBite{% endblock %}
+{% block content %}
+<div style="margin-bottom:1.2rem">
+  <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem">
+    <h2 style="margin:0">AI Order Concierge</h2>
+    <span class="tag ok"><span class="status-dot"></span> Live Database Connected</span>
+  </div>
+  <p class="meta" style="margin-bottom:0.8rem">
+    Inquire about restaurant menus, real-time pricing, stock availability, order status, cancellations, or support complaints.
+  </p>
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap">
+    <span class="tag">Menu Recommendations</span>
+    <span class="tag">Live Prices</span>
+    <span class="tag">Rider & Delivery Tracking</span>
+    <span class="tag">Automated Support Tickets</span>
+  </div>
+</div>
+
+{% set chat_mode = 'inline' %}
+{% include '_chat_panel.html' %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_tag with context %}{% block title %}Support Center - MunchBite{% endblock %}
+{% block content %}
+<div style="margin-bottom:1.4rem">
+  <h2>Customer Support Desk</h2>
+  <p class="meta">Submit issue reports or track existing support tickets</p>
+</div>
+
+<div class="two">
+  <div>
+    <h3 style="margin-bottom:0.8rem">Your Support Tickets</h3>
+    {% for t in tickets %}
+    <div class="card" style="margin-bottom:0.85rem">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem">
+        <div>
+          <strong>Ticket #{{ t.ticket_id }}</strong> &bull; 
+          <span class="tag">{{ t.issue_type }}</span>
+        </div>
+        {{ status_tag(t.status) }}
+      </div>
+      <div class="meta" style="margin-bottom:0.5rem">
+        <span>Created: {{ t.created_at|dt }}</span>
+        {% if t.order_id %}
+          &bull; <span>Order <strong>#{{ t.order_id }}</strong></span>
+        {% endif %}
+      </div>
+      <p style="margin:0; color:var(--text-body); font-size:0.9rem; background:var(--surface-subtle); padding:0.6rem; border-radius:6px; border:1px solid var(--border-subtle)">
+        {{ t.description }}
+      </p>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center; padding:2rem">
+      <div style="font-size:2rem; margin-bottom:0.4rem">🎧</div>
+      <p class="meta">No active or past support tickets found.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div>
+    <form method="post" class="card">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <h3 style="margin-bottom:0.4rem">Open a Support Ticket</h3>
+      <p class="meta" style="margin-bottom:1rem">Our operations desk will review and update your ticket</p>
+
+      <label for="oid">Associated Order (Optional)</label>
+      <select id="oid" name="order_id">
+        <option value="">General inquiry / Not related to a specific order</option>
+        {% for o in orders %}
+          <option value="{{ o.order_id }}">Order #{{ o.order_id }} - {{ o.restaurant_name }} ({{ o.order_date|dt }})</option>
+        {% endfor %}
+      </select>
+
+      <label for="it">Issue Category</label>
+      <select id="it" name="issue_type">
+        {% for t in types %}
+          <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="ds">Detailed Explanation</label>
+      <textarea id="ds" name="description" rows="4" maxlength="1000" required placeholder="Describe the problem (e.g. missing items, delivery delay, food quality concern)..."></textarea>
+
+      <p style="margin-top:1.2rem">
+        <button class="btn" type="submit" style="width:100%">Submit Ticket</button>
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock %}

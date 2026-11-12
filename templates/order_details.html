@@ -1,0 +1,103 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_tag with context %}{% block title %}Order #{{ o.order_id }} - MunchBite{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; flex-wrap:wrap; gap:0.8rem">
+  <div>
+    <h2>Order #{{ o.order_id }} Details</h2>
+    <p class="meta">Placed with <strong>{{ o.restaurant_name }}</strong> on {{ o.order_date|dt }}</p>
+  </div>
+  <div>
+    <a href="{{ url_for('shop.my_orders') }}" class="btn ghost sm">&larr; Back to Orders</a>
+  </div>
+</div>
+
+<div class="two">
+  <div class="card">
+    <h3 style="margin-bottom:0.8rem">Ordered Items</h3>
+    <div class="tablewrap" style="margin-top:0.4rem">
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in o['items'] %}
+          <tr>
+            <td><strong>{{ i.item_name }}</strong></td>
+            <td>{{ i.quantity }}x</td>
+            <td>{{ i.unit_price|rs }}</td>
+            <td><strong>{{ i.line_total|rs }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="total-row">
+      <span>Total Amount</span>
+      <span>{{ o.total|rs }}</span>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:1.2rem">
+    <!-- Order Status -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem">
+        <h3 style="margin:0">Kitchen Status</h3>
+        {{ status_tag(o.order_status) }}
+      </div>
+
+      {% if cancellable %}
+      <div style="background:var(--state-pending-bg); border:1px solid var(--state-pending-border); border-radius:var(--r-sm); padding:0.75rem; margin:0.8rem 0">
+        <span style="font-size:0.86rem; color:var(--state-pending); font-weight:600">This order can be cancelled online before kitchen preparation commences.</span>
+        <form method="post" action="{{ url_for('shop.order_cancel', oid=o.order_id) }}" onsubmit="return confirm('Cancel this order now?')" style="margin-top:0.6rem">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="btn danger sm" type="submit">Cancel Order</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Delivery Tracking -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem">
+        <h3 style="margin:0">Delivery Dispatch</h3>
+        {{ status_tag(o.delivery_status) }}
+      </div>
+      <p style="margin:0.4rem 0"><strong>Address:</strong><br><span style="color:var(--text-body)">{{ o.delivery_address }}</span></p>
+      <p class="meta" style="margin:0.4rem 0">
+        <strong>Assigned Rider:</strong> 
+        {% if o.rider_name %}
+          <span style="font-weight:700; color:var(--text-main)">{{ o.rider_name }}</span>
+        {% else %}
+          <span>Will be assigned once the meal is packed</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- Payment Info -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem">
+        <h3 style="margin:0">Payment Status</h3>
+        {{ status_tag(o.payment_status) }}
+      </div>
+      <div class="meta">Method: <strong>{{ o.payment_method }}</strong></div>
+      {% if o.payment_date %}
+        <div class="meta" style="margin-top:0.2rem">Recorded on {{ o.payment_date|dt }}</div>
+      {% else %}
+        <div class="meta" style="margin-top:0.2rem">Payment to be collected in cash upon arrival.</div>
+      {% endif %}
+    </div>
+
+    <div style="display:flex; gap:0.8rem; flex-wrap:wrap">
+      {% if o.order_status == 'Delivered' %}
+        <a class="btn" href="{{ url_for('shop.my_reviews') }}">Rate Restaurant</a>
+      {% endif %}
+      <a class="btn ghost" href="{{ url_for('shop.tickets') }}">Report an Issue</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

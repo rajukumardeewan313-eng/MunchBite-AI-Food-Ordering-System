@@ -1,0 +1,37 @@
+{% extends 'base.html' %}{% block title %}Create Account - MunchBite{% endblock %}
+{% block content %}
+<div class="card form-narrow" style="padding:2.2rem; box-shadow:var(--shadow-md)">
+  <div style="text-align:center; margin-bottom:1.5rem">
+    <div class="logo-badge" style="width:42px; height:42px; font-size:1.25rem; margin:0 auto 0.8rem">M</div>
+    <h2 style="margin:0">Create an Account</h2>
+    <p class="meta" style="margin-top:0.3rem">Join MunchBite for rapid delivery and smart AI ordering</p>
+  </div>
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <label for="fn">Full Name</label>
+    <input id="fn" name="full_name" required value="{{ request.form.get('full_name','') }}" placeholder="e.g. Tariq Mehmood">
+    
+    <label for="em">Email Address</label>
+    <input id="em" type="email" name="email" required value="{{ request.form.get('email','') }}" placeholder="name@example.com">
+    
+    <label for="ph">Phone Number</label>
+    <input id="ph" name="phone" value="{{ request.form.get('phone','') }}" placeholder="0300-1234567">
+    
+    <label for="ct">City</label>
+    <input id="ct" name="city" value="{{ request.form.get('city','Karachi') }}" placeholder="Karachi">
+    
+    <label for="pw">Password (min 6 characters)</label>
+    <input id="pw" type="password" name="password" required minlength="6" placeholder="Choose a secure password">
+    
+    <p style="margin-top:1.4rem">
+      <button class="btn" type="submit" style="width:100%; padding:0.75rem">Create Account</button>
+    </p>
+  </form>
+
+  <p class="meta" style="margin-top:1.2rem; text-align:center">
+    Already registered? <a href="{{ url_for('auth.login') }}" style="font-weight:600">Sign in &rarr;</a>
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}{% from '_macros.html' import food_card with context %}{% block title %}Menu - Food Catalog{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem">
+  <div>
+    <h2>Food Catalog & Menus</h2>
+    <p class="meta">Filter by category, restaurant, max budget, or spice level</p>
+  </div>
+  {% if foods %}
+    <span class="tag ok"><span class="status-dot"></span> {{ foods|length }} dish{{ 'es' if foods|length != 1 }} available</span>
+  {% endif %}
+</div>
+
+<!-- Category Quick Pills Bar -->
+<div class="category-strip" style="padding-bottom:0.8rem; margin-bottom:1.2rem">
+  <a href="{{ url_for('shop.menu') }}" class="tag {{ 'ok' if not f.get('category') else '' }}" style="padding:0.4rem 1rem; font-size:0.86rem">All Categories</a>
+  {% for c in categories %}
+    <a href="{{ url_for('shop.menu', category=c.category_name) }}" class="tag {{ 'ok' if f.get('category') == c.category_name else '' }}" style="padding:0.4rem 1rem; font-size:0.86rem">
+      {{ c.category_name }}
+    </a>
+  {% endfor %}
+</div>
+
+<form class="filters" method="get">
+  <div>
+    <label for="q">Keyword</label>
+    <input id="q" name="q" value="{{ f.get('q','') }}" placeholder="e.g. biryani, burger, tikka">
+  </div>
+  <div>
+    <label for="category">Category</label>
+    <select id="category" name="category">
+      <option value="">All Categories</option>
+      {% for c in categories %}
+        <option value="{{ c.category_name }}" {{ 'selected' if f.get('category') == c.category_name }}>{{ c.category_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="restaurant">Restaurant</label>
+    <select id="restaurant" name="restaurant">
+      <option value="">All Restaurants</option>
+      {% for r in restaurants %}
+        <option value="{{ r.restaurant_id }}" {{ 'selected' if f.get('restaurant') == r.restaurant_id|string }}>{{ r.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="mp">Max Price (Rs.)</label>
+    <input id="mp" type="number" min="0" name="max_price" value="{{ f.get('max_price','') }}" placeholder="e.g. 700">
+  </div>
+  <div>
+    <button class="btn" type="submit" style="width:100%">Filter</button>
+  </div>
+  <div style="grid-column: 1 / -1; display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap; padding-top:0.6rem; border-top:1px solid var(--border-light)">
+    <label style="margin:0; display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer">
+      <input type="checkbox" name="spicy" value="1" style="width:auto" {{ 'checked' if f.get('spicy') == '1' }}> 
+      <span class="tag">Spicy Only</span>
+    </label>
+    <label style="margin:0; display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer">
+      <input type="checkbox" name="show_all" value="1" style="width:auto" {{ 'checked' if f.get('show_all') == '1' }}> 
+      <span>Include unavailable items</span>
+    </label>
+    {% if f.get('q') or f.get('category') or f.get('restaurant') or f.get('max_price') or f.get('spicy') or f.get('show_all') %}
+      <a href="{{ url_for('shop.menu') }}" class="meta" style="color:var(--brand-accent); font-weight:600">Reset Filters</a>
+    {% endif %}
+  </div>
+</form>
+
+{% if foods %}
+  <div class="grid">
+    {% for x in foods %}
+      {{ food_card(x) }}
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card" style="text-align:center; padding:3.5rem 1.5rem">
+    <div style="font-size:3rem; margin-bottom:0.6rem">🍽️</div>
+    <h3>No dishes found matching your selection</h3>
+    <p class="meta" style="max-width:44ch; margin:0.5rem auto 1.5rem">Try searching for other keywords, increasing your budget, or clearing active filters.</p>
+    <a href="{{ url_for('shop.menu') }}" class="btn">View All Menu Items</a>
+  </div>
+{% endif %}
+{% endblock %}

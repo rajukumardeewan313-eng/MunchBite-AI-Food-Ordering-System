@@ -1,0 +1,28 @@
+{% extends 'base.html' %}{% block title %}Partner Portal Login - MunchBite{% endblock %}
+{% block content %}
+<div class="card form-narrow" style="box-shadow:var(--shadow-md); padding:2rem">
+  <div style="text-align:center; margin-bottom:1.4rem">
+    <div style="font-size:2.2rem; margin-bottom:0.2rem">🔐</div>
+    <h2 style="margin:0">Partner Back-Office</h2>
+    <p class="meta">Administrative management for menus, orders, riders, and tickets</p>
+  </div>
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    
+    <label for="u">Username</label>
+    <input id="u" name="username" required autofocus placeholder="admin">
+    
+    <label for="p">Password</label>
+    <input id="p" type="password" name="password" required placeholder="Enter administrator password">
+    
+    <p style="margin-top:1.4rem">
+      <button class="btn" type="submit" style="width:100%; padding:0.75rem">Sign in to Portal</button>
+    </p>
+  </form>
+
+  <div style="background:var(--surface-subtle); border:1px solid var(--border-subtle); border-radius:var(--r-sm); padding:0.6rem 0.8rem; font-size:0.83rem; margin-top:1.4rem">
+    <strong>Demo Credentials:</strong> <code>admin</code> / <code>admin123</code>
+  </div>
+</div>
+{% endblock %}

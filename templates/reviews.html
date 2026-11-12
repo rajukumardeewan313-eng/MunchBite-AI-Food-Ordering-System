@@ -1,0 +1,64 @@
+{% extends 'base.html' %}{% block title %}Customer Reviews - MunchBite{% endblock %}
+{% block content %}
+<div style="margin-bottom:1.4rem">
+  <h2>Customer Reviews & Ratings</h2>
+  <p class="meta">Verified ratings are permitted exclusively for restaurants with completed deliveries</p>
+</div>
+
+<div class="two">
+  <div>
+    <h3 style="margin-bottom:0.8rem">Your Reviews</h3>
+    {% for v in reviews %}
+    <div class="card" style="margin-bottom:0.85rem">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem">
+        <strong>{{ v.restaurant_name }}</strong>
+        <span class="stars">{{ '★' * v.rating }}</span>
+      </div>
+      <div class="meta" style="margin-bottom:0.4rem">Reviewed on {{ v.review_date|dt }}</div>
+      <p style="margin:0; color:var(--text-body); font-style:italic">"{{ v.review_comment or 'No written feedback provided.' }}"</p>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center; padding:2rem">
+      <div style="font-size:2rem; margin-bottom:0.4rem">⭐</div>
+      <p class="meta">You haven't posted any reviews yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div>
+    <form method="post" class="card">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <h3 style="margin-bottom:0.5rem">Submit a Review</h3>
+      {% if eligible %}
+      <p class="meta" style="margin-bottom:1rem">Select from your delivered restaurants:</p>
+      
+      <label for="rid">Restaurant</label>
+      <select id="rid" name="restaurant_id">
+        {% for r in eligible %}
+          <option value="{{ r.restaurant_id }}">{{ r.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="rt">Rating</label>
+      <select id="rt" name="rating">
+        {% for n in [5,4,3,2,1] %}
+          <option value="{{ n }}">{{ '★' * n }} &bull; {{ n }} - {{ ['','Poor','Fair','Good','Very Good','Excellent'][n] }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="cm">Comment (Optional)</label>
+      <textarea id="cm" name="comment" rows="3" maxlength="500" placeholder="Provide feedback regarding meal quality and delivery timeliness..."></textarea>
+
+      <p style="margin-top:1.2rem">
+        <button class="btn" type="submit" style="width:100%">Submit Review</button>
+      </p>
+      {% else %}
+      <div style="background:var(--surface-subtle); border:1px solid var(--border-subtle); border-radius:var(--r-sm); padding:1.2rem; text-align:center">
+        <div style="font-size:1.8rem; margin-bottom:0.4rem">🍽️</div>
+        <p class="meta" style="margin:0">Reviews can be submitted once an order from a restaurant is marked as <strong>Delivered</strong>.</p>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

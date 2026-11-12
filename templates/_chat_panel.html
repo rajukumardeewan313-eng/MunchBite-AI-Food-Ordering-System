@@ -1,0 +1,28 @@
+<section id="chat-panel" class="chat {{ chat_mode }}" aria-label="AI Food Assistant">
+  <div class="chat-head">
+    <div class="chat-head-title">
+      <div class="chat-bot-icon">AI</div>
+      <div>
+        <strong>Food Assistant <span class="pulse-dot" title="Live Database Connected"></span></strong>
+        <small>Real-time database queries & recommendations</small>
+      </div>
+    </div>
+    <div style="display:flex; gap:0.35rem; align-items:center">
+      <button type="button" class="iconbtn js-reset" title="Clear chat history">Reset</button>
+      {% if chat_mode == 'floating' %}
+      <button type="button" class="iconbtn js-close" aria-label="Close chat" title="Close window">✕</button>
+      {% endif %}
+    </div>
+  </div>
+  <div class="chat-log" aria-live="polite"></div>
+  <div class="chips">
+    <button type="button" class="chip" data-q="I want spicy chicken food under 700">Spicy chicken under Rs. 700</button>
+    <button type="button" class="chip" data-q="Where is my order?">Where is my order?</button>
+    <button type="button" class="chip" data-q="Show me burgers">Show burgers</button>
+    <button type="button" class="chip" data-q="How can I place an order?">How to order?</button>
+  </div>
+  <form class="chat-form" autocomplete="off">
+    <input type="text" maxlength="500" placeholder="Ask about menu, prices, stock, or your order..." aria-label="Message">
+    <button class="btn" type="submit">Send</button>
+  </form>
+</section>

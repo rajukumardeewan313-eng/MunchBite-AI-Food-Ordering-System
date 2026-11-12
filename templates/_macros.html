@@ -1,0 +1,185 @@
+{% macro food_card(f) %}
+{% set iname = f.item_name|lower %}
+{% set cname = (f.category_name or '')|lower %}
+{% set dish_img = f.image_url if f.image_url else (
+  'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&auto=format&fit=crop&q=60' if ('fish' in iname or 'seafood' in iname or cname == 'seafood') else (
+  'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&auto=format&fit=crop&q=60' if ('brownie' in iname or 'lava' in iname) else (
+    'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&auto=format&fit=crop&q=60' if ('gulab' in iname or 'jamun' in iname) else (
+        'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=500&auto=format&fit=crop&q=60' if ('student' in iname or 'pulao' in iname) else (
+          'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&auto=format&fit=crop&q=60' if (('beef' in iname or 'dum' in iname or 'handi' in iname or 'mutton' in iname) and ('biryani' in iname or cname == 'biryani')) else (
+            'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500&auto=format&fit=crop&q=60' if ('biryani' in iname or cname == 'biryani') else (
+              'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=60' if ('tikka' in iname and 'pizza' in iname) else (
+                'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500&auto=format&fit=crop&q=60' if ('pepperoni' in iname or 'fajita' in iname) else (
+                  'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop&q=60' if ('pizza' in iname or cname == 'pizza') else (
+                    'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=500&auto=format&fit=crop&q=60' if 'zinger' in iname else (
+                      'https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&auto=format&fit=crop&q=60' if (('beef' in iname or 'gourmet' in iname or 'double' in iname or 'smash' in iname) and ('burger' in iname or cname == 'burger')) else (
+                        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=60' if ('burger' in iname or cname == 'burger') else (
+                          'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500&auto=format&fit=crop&q=60' if ('shake' in iname or 'coffee' in iname or 'milkshake' in iname) else (
+                            'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&auto=format&fit=crop&q=60' if ('lemonade' in iname or 'margarita' in iname or 'mint' in iname) else (
+                              'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500&auto=format&fit=crop&q=60' if ('soft' in iname or 'soda' in iname or 'cola' in iname or 'can' in iname or cname == 'drinks') else (
+                                'https://images.unsplash.com/photo-1562967914-608f82629710?w=500&auto=format&fit=crop&q=60' if ('wing' in iname or 'nugget' in iname) else (
+                                  'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format&fit=crop&q=60' if ('fries' in iname) else (
+                                    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&auto=format&fit=crop&q=60' if ('kabab' in iname or 'reshmi' in iname or 'seekh' in iname or 'tikka' in iname or 'boti' in iname or 'bbq' in iname or 'malai' in iname) else (
+                                      'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&auto=format&fit=crop&q=60' if cname == 'desserts' else
+                                      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60'
+                                    )
+                                  )
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+) %}
+<article class="modern-food-card group" data-category="{{ cname }}" data-id="{{ f.food_id }}">
+  <div class="card-image-wrap">
+    <img src="{{ dish_img }}" alt="{{ f.item_name }}" class="card-food-img" loading="lazy">
+    <div class="image-overlay-gradient"></div>
+
+    <div class="card-badge-top-left">
+      <span class="rating-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="1">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>{{ f.rating or '4.8' }}</span>
+      </span>
+    </div>
+
+    <div class="card-badge-top-right">
+      <span class="prep-time-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>{{ f.prep_time or '20 min' }}</span>
+      </span>
+    </div>
+
+    {% if f.badge %}
+      <div class="card-badge-bottom-left">
+        <span class="feature-tag-chip {{ 'spicy' if f.is_spicy else '' }}">{{ f.badge }}</span>
+      </div>
+    {% elif f.is_spicy %}
+      <div class="card-badge-bottom-left">
+        <span class="feature-tag-chip spicy">Spicy 🌶</span>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="card-content-body">
+    <div class="card-meta-line">
+      <span class="card-restaurant-name">{{ f.restaurant_name }}</span>
+      <span class="meta-dot">&bull;</span>
+      <span class="card-category-label">{{ f.category_name }}</span>
+    </div>
+
+    <h3 class="card-dish-name" title="{{ f.item_name }}">{{ f.item_name }}</h3>
+    
+    {% if f.description %}
+      <p class="card-dish-desc">{{ f.description }}</p>
+    {% endif %}
+
+    <div class="card-footer-row">
+      <div class="card-price-wrap">
+        <span class="price-val">{{ f.price|rs }}</span>
+      </div>
+
+      <div class="cart-action-container" data-food-id="{{ f.food_id }}">
+        <button 
+          type="button" 
+          class="btn-add-cart" 
+          onclick="addToCart({{ f.food_id }})"
+          aria-label="Add {{ f.item_name }} to cart"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add</span>
+        </button>
+
+        <div class="qty-control-group hidden">
+          <button type="button" class="qty-btn qty-minus" onclick="changeQty({{ f.food_id }}, -1)" aria-label="Decrease quantity">−</button>
+          <span class="qty-display">1</span>
+          <button type="button" class="qty-btn qty-plus" onclick="changeQty({{ f.food_id }}, 1)" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro restaurant_card(r) %}
+{% set bg_img = r.banner_image if r.banner_image else ('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&auto=format&fit=crop&q=80' if 'Food Palace' in r.name else ('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80' if 'Karachi Bites' in r.name else 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80')) %}
+<article class="card restaurant-card group" style="padding:0; overflow:hidden; border-radius:18px; display:flex; flex-direction:column; transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1)">
+  <div style="position:relative; height:150px; overflow:hidden; background:#161A22">
+    <img src="{{ bg_img }}" alt="{{ r.name }}" style="width:100%; height:100%; object-fit:cover; transition:transform 0.4s ease; opacity:0.88" class="group-hover:scale-105">
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.65) 100%)"></div>
+    
+    <div style="position:absolute; top:10px; right:10px">
+      <span class="tag ok" style="background:rgba(16,185,129,0.92); color:#FFFFFF; border:none; padding:0.25rem 0.7rem; font-weight:700; border-radius:var(--r-full); box-shadow:0 2px 6px rgba(0,0,0,0.25)">
+        <span class="status-dot" style="background:#FFFFFF"></span> {{ r.status }}
+      </span>
+    </div>
+
+    <div style="position:absolute; bottom:10px; left:12px; right:12px">
+      <span style="font-size:0.75rem; background:rgba(226,55,68,0.92); color:#FFFFFF; padding:0.15rem 0.55rem; border-radius:4px; font-weight:700; text-transform:uppercase">
+        Verified Kitchen
+      </span>
+      <h3 style="margin:0.25rem 0 0; color:#FFFFFF; font-size:1.25rem; font-family:var(--font-heading); text-shadow:0 1px 4px rgba(0,0,0,0.5)">
+        <a href="{{ url_for('shop.restaurant_detail', rid=r.restaurant_id) }}" style="color:#FFFFFF; text-decoration:none">{{ r.name }}</a>
+      </h3>
+    </div>
+  </div>
+
+  <div style="padding:1.1rem 1.25rem; display:flex; flex-direction:column; flex:1">
+    <div class="meta" style="margin-bottom:0.4rem; font-size:0.86rem; color:var(--text-secondary)">
+      <span>📍 {{ r.address }}, {{ r.city }}</span>
+    </div>
+    {% if r.cuisine %}
+      <div class="meta" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem">
+        <span>🍲 {{ r.cuisine }}</span>
+      </div>
+    {% endif %}
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:0.75rem; border-top:1px solid var(--border-light)">
+      {% if r.avg_rating %}
+        <div style="display:flex; align-items:center; gap:0.35rem">
+          <span class="stars" style="color:#F59E0B">★</span>
+          <span style="font-weight:800; font-size:0.92rem; color:var(--text-main)">{{ r.avg_rating }}</span>
+          <span class="meta" style="font-size:0.8rem">({{ r.review_count }})</span>
+        </div>
+      {% else %}
+        <span class="meta" style="font-size:0.8rem; font-weight:600">⏱ 20–35 min</span>
+      {% endif %}
+      <a class="btn sm" href="{{ url_for('shop.restaurant_detail', rid=r.restaurant_id) }}" style="font-weight:700; padding:0.45rem 0.95rem">View Menu &rarr;</a>
+    </div>
+  </div>
+</article>
+{% endmacro %}
+
+{% macro status_tag(s) %}
+  {% if s in ['Delivered', 'Paid', 'Resolved'] %}
+    <span class="tag ok"><span class="status-dot"></span> {{ s }}</span>
+  {% elif s in ['On the Way', 'Out for Delivery', 'Assigned', 'Confirmed'] %}
+    <span class="tag info"><span class="status-dot"></span> {{ s }}</span>
+  {% elif s in ['Preparing', 'Pending', 'Open', 'In Progress'] %}
+    <span class="tag warn"><span class="status-dot"></span> {{ s }}</span>
+  {% elif s in ['Cancelled', 'Failed', 'Closed'] %}
+    <span class="tag no"><span class="status-dot"></span> {{ s }}</span>
+  {% elif s == 'Refunded' %}
+    <span class="tag info"><span class="status-dot"></span> Refunded</span>
+  {% else %}
+    <span class="tag"><span class="status-dot"></span> {{ s }}</span>
+  {% endif %}
+{% endmacro %}

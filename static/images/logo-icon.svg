@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="MunchBite Logo">
+  <defs>
+    <!-- Primary Brand Gradient -->
+    <linearGradient id="mbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B55" />
+      <stop offset="55%" stop-color="#E23744" />
+      <stop offset="100%" stop-color="#B81423" />
+    </linearGradient>
+    
+    <!-- Accent Ray Gradient -->
+    <linearGradient id="mbAccentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E23744" />
+      <stop offset="100%" stop-color="#FF8A00" />
+    </linearGradient>
+
+    <!-- Warm Core Aura -->
+    <radialGradient id="mbCoreAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF9E44" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#E23744" stop-opacity="0.05" />
+    </radialGradient>
+
+    <!-- Soft Drop Shadow for depth -->
+    <filter id="mbGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#E23744" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Ambient Core Glow -->
+  <circle cx="50" cy="50" r="14" fill="url(#mbCoreAura)" />
+
+  <!-- 12-Ray Claude-Style AI Gastronomy Starburst -->
+  <g filter="url(#mbGlow)">
+    <!-- Cardinal Rays (North, East, South, West) - Longest -->
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" fill="url(#mbGrad)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(90 50 50)" fill="url(#mbGrad)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(180 50 50)" fill="url(#mbGrad)" />
+    <rect x="46.25" y="4" width="7.5" height="32" rx="3.75" transform="rotate(270 50 50)" fill="url(#mbGrad)" />
+
+    <!-- Diagonal Rays (45 deg offsets) - Medium -->
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(45 50 50)" fill="url(#mbAccentGrad)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(135 50 50)" fill="url(#mbAccentGrad)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(225 50 50)" fill="url(#mbAccentGrad)" />
+    <rect x="46.6" y="9" width="6.8" height="27" rx="3.4" transform="rotate(315 50 50)" fill="url(#mbAccentGrad)" />
+
+    <!-- Minor Subtle Rays (30 / 60 deg offsets) - Compact -->
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(30 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(60 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(120 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(150 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(210 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(240 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(300 50 50)" fill="url(#mbGrad)" />
+    <rect x="47" y="14" width="6.0" height="22" rx="3.0" transform="rotate(330 50 50)" fill="url(#mbGrad)" />
+  </g>
+
+  <!-- Central Intelligence Core Spark (Diamond Star) -->
+  <circle cx="50" cy="50" r="5" fill="#FFFFFF" />
+  <circle cx="50" cy="50" r="2.5" fill="#FFD166" />
+</svg>

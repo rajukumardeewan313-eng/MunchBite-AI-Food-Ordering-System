@@ -1,0 +1,120 @@
+{% extends 'base.html' %}{% from '_macros.html' import status_tag with context %}{% block title %}Manage {{ e.title }} - Admin{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; flex-wrap:wrap; gap:0.8rem">
+  <div>
+    <h2>Manage {{ e.title }}</h2>
+    <p class="meta">Direct Oracle database entity administration</p>
+  </div>
+  <div>
+    <span class="tag"><span class="status-dot"></span> {{ rows|length }} total records</span>
+  </div>
+</div>
+
+{% if add %}
+<details class="card" style="margin-bottom:1.5rem">
+  <summary style="cursor:pointer; font-weight:600; color:var(--text-main); display:flex; align-items:center; gap:0.4rem">
+    <span>+ Add New {{ e.title }} Record</span>
+  </summary>
+  <form method="post" action="{{ url_for('admin.add', name=name) }}" style="margin-top:1.2rem">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; align-items:end">
+      {% for fname, label, kind, opts in add %}
+      <div>
+        <label for="a_{{ fname }}">{{ label }}</label>
+        {% if kind == 'select' %}
+          <select id="a_{{ fname }}" name="{{ fname }}">
+            {% for v, t in opts %}
+              <option value="{{ v }}">{{ t }}</option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <input id="a_{{ fname }}" name="{{ fname }}" type="{{ kind }}" {{ 'step=0.01 min=0' if kind == 'number' }} placeholder="{{ label }}">
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <p style="margin-top:1.2rem">
+      <button class="btn" type="submit">Save Record</button>
+    </p>
+  </form>
+</details>
+{% endif %}
+
+<div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        {% for k, label in e.cols %}
+          <th>{{ label }}</th>
+        {% endfor %}
+        {% if e.forms or e.delete %}
+          <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        {% for k, label in e.cols %}
+          <td>
+            {% set v = row[k] %}
+            {% if k in ['total', 'amount', 'price'] %}
+              <strong>{{ v|rs }}</strong>
+            {% elif k == 'is_available' %}
+              {% if v == 1 %}
+                <span class="tag ok"><span class="status-dot"></span> Available</span>
+              {% else %}
+                <span class="tag no"><span class="status-dot"></span> Unavailable</span>
+              {% endif %}
+            {% elif k == 'is_spicy' %}
+              {% if v == 1 %}
+                <span class="tag">Spicy</span>
+              {% else %}
+                <span class="meta">Mild</span>
+              {% endif %}
+            {% elif k in ['order_status', 'payment_status', 'delivery_status', 'status'] and (v in ['Pending','Confirmed','Preparing','Out for Delivery','Delivered','Cancelled','Paid','Failed','Refunded','Open','In Progress','Resolved','Closed']) %}
+              {{ status_tag(v) }}
+            {% else %}
+              {{ v|dt }}
+            {% endif %}
+          </td>
+        {% endfor %}
+
+        {% if e.forms or e.delete %}
+        <td class="rowforms">
+          {% for fm in e.forms or [] %}
+          <form method="post" class="inline-form" action="{{ url_for('admin.row_action', name=name, rid=row.id, action=fm.action) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            {% for fname, kind, opts, cur in fm.fields %}
+              {% if kind == 'select' %}
+                <select name="{{ fname }}" aria-label="{{ fname }}">
+                  {% for v, t in opts %}
+                    <option value="{{ v }}" {{ 'selected' if row[cur]|string == v|string }}>{{ t }}</option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                <input name="{{ fname }}" value="{{ row[cur] or '' }}" placeholder="Enter rider" aria-label="{{ fname }}" style="width:110px">
+              {% endif %}
+            {% endfor %}
+            <button class="btn ghost sm" type="submit">{{ fm.label }}</button>
+          </form>
+          {% endfor %}
+
+          {% if e.delete %}
+          <form method="post" class="inline-form" action="{{ url_for('admin.row_action', name=name, rid=row.id, action='delete') }}" onsubmit="return confirm('Permanently delete this record?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="btn danger sm" type="submit">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+        {% endif %}
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10" style="text-align:center; padding:2rem" class="meta">No records in this entity table yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
